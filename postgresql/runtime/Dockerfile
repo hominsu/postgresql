@@ -1,4 +1,4 @@
-ARG VERSION
+ARG VERSION REPO
 
 FROM ${REPO}/postgresql:${VERSION}-extension as extension
 

@@ -8,7 +8,6 @@ variable "VERSION" {
 
 group "default" {
   targets = [
-    "extension",
     "postgresql",
   ]
 }
@@ -23,7 +22,7 @@ target "extension" {
     "${REPO}/postgresql:${VERSION}-extension",
   ]
   platforms = [
-    "linux/arm64", "linux/amd64", "linux/arm"
+    "linux/arm64", "linux/amd64"
   ]
 }
 
@@ -40,6 +39,6 @@ target "postgresql" {
     "${REPO}/postgresql:${VERSION}",
   ]
   platforms = [
-    "linux/arm64", "linux/amd64", "linux/arm"
+    "linux/arm64", "linux/amd64"
   ]
 }
