@@ -1,6 +1,6 @@
 ARG VERSION REPO
 
-FROM ${REPO}/postgresql:${VERSION}-extension as extension
+FROM ${REPO}/postgresql:${VERSION}-extension AS extension
 
 FROM bitnami/postgresql:${VERSION}
 
