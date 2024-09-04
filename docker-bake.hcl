@@ -1,44 +1,44 @@
-variable "REPO" {
-  default = "hominsu"
-}
-
-variable "VERSION" {
-  default = "16"
-}
+target "metadata" {}
 
 group "default" {
   targets = [
     "postgresql",
+    "postgresql-repmgr"
+  ]
+}
+
+target "cross" {
+  platforms = [
+    "linux/arm64", 
+    "linux/amd64"
   ]
 }
 
 target "extension" {
-  dockerfile = "postgresql/extension/Dockerfile"
-  args       = {
-    REPO           = "${REPO}"
-    VERSION        = "${VERSION}"
+  contexts = {
+    "postgresql" = "docker-image://bitnami/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
   }
-  tags = [
-    "${REPO}/postgresql:${VERSION}-extension",
-  ]
-  platforms = [
-    "linux/arm64", "linux/amd64"
-  ]
+  dockerfile = "postgresql/extension/Dockerfile"
 }
 
 target "postgresql" {
+  inherits = [ "metadata", "cross" ]
   contexts = {
-    "${REPO}/postgresql:${VERSION}-extension" = "target:extension"
+    "extension"   = "target:extension"
+    "postgresql"  = "docker-image://bitnami/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
   }
-  dockerfile = "postgresql/runtime/Dockerfile"
-  args       = {
-    REPO           = "${REPO}"
-    VERSION        = "${VERSION}"
+  dockerfile = "postgresql/runtime/postgresql.Dockerfile"
+}
+
+target "postgresql-repmgr" {
+  inherits = [ "metadata", "cross" ]
+  contexts = {
+    "extension"   = "target:extension"
+    "postgresql"  = "docker-image://bitnami/postgresql-repmgr:${target.metadata.args.DOCKER_META_VERSION}"
   }
-  tags = [
-    "${REPO}/postgresql:${VERSION}",
-  ]
-  platforms = [
-    "linux/arm64", "linux/amd64"
-  ]
+  dockerfile = "postgresql/runtime/postgresql-repmgr.Dockerfile"
+  args = {
+    DOCKER_META_IMAGES = replace(target.metadata.args.DOCKER_META_IMAGES, "postgresql", "postgresql-repmgr")
+  }
+  tags = [ for tag in target.metadata.tags : replace(tag, "postgresql", "postgresql-repmgr") ]
 }

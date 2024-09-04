@@ -1,6 +1,4 @@
-ARG VERSION
-
-FROM bitnami/postgresql:${VERSION} AS pgvector
+FROM postgresql AS pgvector
 
 USER root
 
