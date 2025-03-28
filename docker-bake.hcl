@@ -15,6 +15,7 @@ target "cross" {
 }
 
 target "extension" {
+  inherits = [ "cross" ]
   contexts = {
     "postgresql" = "docker-image://bitnami/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
   }
