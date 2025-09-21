@@ -17,7 +17,7 @@ target "cross" {
 target "extension" {
   inherits = [ "cross" ]
   contexts = {
-    "postgresql" = "docker-image://bitnami/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
+    "postgresql" = "docker-image://bitnamilegacy/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
   }
   dockerfile = "postgresql/extension/Dockerfile"
 }
@@ -26,7 +26,7 @@ target "postgresql" {
   inherits = [ "metadata", "cross" ]
   contexts = {
     "extension"   = "target:extension"
-    "postgresql"  = "docker-image://bitnami/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
+    "postgresql"  = "docker-image://bitnamilegacy/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
   }
   dockerfile = "postgresql/runtime/postgresql.Dockerfile"
 }
@@ -35,7 +35,7 @@ target "postgresql-repmgr" {
   inherits = [ "metadata", "cross" ]
   contexts = {
     "extension"   = "target:extension"
-    "postgresql"  = "docker-image://bitnami/postgresql-repmgr:${target.metadata.args.DOCKER_META_VERSION}"
+    "postgresql"  = "docker-image://bitnamilegacy/postgresql-repmgr:${target.metadata.args.DOCKER_META_VERSION}"
   }
   dockerfile = "postgresql/runtime/postgresql-repmgr.Dockerfile"
   args = {
