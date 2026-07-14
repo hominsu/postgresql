@@ -8,7 +8,10 @@ ARG PARADEDB_VERSION=0.24.2
 ARG RUST_TOOLCHAIN=stable
 ARG BUILD_DEPS="ca-certificates curl git gcc libc6-dev make clang libclang-dev jq pkg-config libssl-dev"
 
-ENV PATH="/root/.cargo/bin:${PATH}"
+ENV HOME="/root" \
+    CARGO_HOME="/root/.cargo" \
+    RUSTUP_HOME="/root/.rustup" \
+    PATH="/root/.cargo/bin:${PATH}"
 
 RUN pg_config="$(command -v pg_config)" && \
     pg_version="$("${pg_config}" --version)" && \
