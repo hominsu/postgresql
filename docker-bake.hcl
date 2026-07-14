@@ -9,23 +9,36 @@ group "default" {
 
 target "cross" {
   platforms = [
-    "linux/arm64", 
+    "linux/arm64",
     "linux/amd64"
   ]
 }
 
-target "extension" {
+group "extension" {
+  targets = ["pgvector", "pg_search"]
+}
+
+target "pgvector" {
   inherits = [ "cross" ]
   contexts = {
     "postgresql" = "docker-image://bitnamilegacy/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
   }
-  dockerfile = "postgresql/extension/Dockerfile"
+  dockerfile = "postgresql/extension/pgvector.Dockerfile"
+}
+
+target "pg_search" {
+  inherits = [ "cross" ]
+  contexts = {
+    "postgresql" = "docker-image://bitnamilegacy/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
+  }
+  dockerfile = "postgresql/extension/pg_search.Dockerfile"
 }
 
 target "postgresql" {
   inherits = [ "metadata", "cross" ]
   contexts = {
-    "extension"   = "target:extension"
+    "pgvector"    = "target:pgvector"
+    "pg_search"    = "target:pg_search"
     "postgresql"  = "docker-image://bitnamilegacy/postgresql:${target.metadata.args.DOCKER_META_VERSION}"
   }
   dockerfile = "postgresql/runtime/postgresql.Dockerfile"
@@ -34,7 +47,8 @@ target "postgresql" {
 target "postgresql-repmgr" {
   inherits = [ "metadata", "cross" ]
   contexts = {
-    "extension"   = "target:extension"
+    "pgvector"    = "target:pgvector"
+    "pg_search"    = "target:pg_search"
     "postgresql"  = "docker-image://bitnamilegacy/postgresql-repmgr:${target.metadata.args.DOCKER_META_VERSION}"
   }
   dockerfile = "postgresql/runtime/postgresql-repmgr.Dockerfile"
