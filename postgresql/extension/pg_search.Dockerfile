@@ -6,7 +6,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ARG PARADEDB_VERSION=0.24.2
 ARG RUST_TOOLCHAIN=stable
-ARG BUILD_DEPS="curl gcc clang libclang-dev jq"
+ARG BUILD_DEPS="ca-certificates curl git gcc libc6-dev make clang libclang-dev jq pkg-config libssl-dev"
 
 ENV PATH="/root/.cargo/bin:${PATH}"
 
